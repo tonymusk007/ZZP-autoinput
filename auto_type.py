@@ -136,11 +136,36 @@ class AutoTypeApp:
 
         # 启动系统托盘
         self._start_tray_icon()
+        # 延迟再设一次图标（防止被主题覆盖）
+        self.root.after(100, self._set_window_icon)
 
     def _set_window_icon(self):
+        """设置窗口图标（标题栏 + 任务栏 + Alt+Tab），多重保障防止被主题覆盖"""
         try:
-            if ICO_PATH.exists(): self.root.iconbitmap(str(ICO_PATH))
-        except: pass
+            ico = str(ICO_PATH)
+            if not Path(ico).exists():
+                return
+            # 方式1: iconbitmap - 标准方式
+            try:
+                self.root.iconbitmap(ico)
+            except:
+                pass
+            # 方式2: iconphoto - 更底层
+            try:
+                img = Image.open(ico).resize((32, 32), Image.LANCZOS)
+                if img.mode != "RGBA":
+                    img = img.convert("RGBA")
+                self._ph_ico = ImageTk.PhotoImage(img)  # 必须保持引用
+                self.root.iconphoto(True, self._ph_ico)
+            except:
+                pass
+            # 方式3: 通过 tk.call 直接设 wm 属性
+            try:
+                self.root.tk.call("wm", "iconbitmap", self.root._w, "-default", ico)
+            except:
+                pass
+        except Exception:
+            pass
 
     # ── 系统托盘 ──────────────────────────────────────────
     def _get_tray_image(self):
