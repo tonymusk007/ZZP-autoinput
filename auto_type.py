@@ -269,7 +269,7 @@ class AutoTypeApp:
             self._ico_tk = ImageTk.PhotoImage(img)
             Label(hdr, image=self._ico_tk).grid(row=0, column=0, padx=(0, 10))
         except: pass
-        Label(hdr, text=APP_TITLE, font=("微软雅黑", 16, "bold"),
+        Label(hdr, text="自动打字工具", font=("微软雅黑", 16, "bold"),
               bootstyle="inverse-info").grid(row=0, column=1, sticky="w")
         self._header_subtitle = Label(hdr, text="", font=("微软雅黑", 9), bootstyle="secondary")
         self._header_subtitle.grid(row=0, column=2, sticky="e", padx=(10, 0))
