@@ -16,3 +16,9 @@ build/
 
 # 临时文件
 *.tmp
+
+dist/
+build/
+*.spec
+__pycache__/
+
